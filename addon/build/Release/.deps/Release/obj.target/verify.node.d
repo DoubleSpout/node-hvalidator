@@ -1,0 +1,1 @@
+cmd_Release/obj.target/verify.node := flock ./Release/linker.lock g++ -shared -pthread -rdynamic -m32  -Wl,-soname=verify.node -o Release/obj.target/verify.node -Wl,--start-group Release/obj.target/verify/verify.o Release/obj.target/verify/SimpleVerify.o -Wl,--end-group 
