@@ -3,7 +3,12 @@
 #include <node.h>
 #include <string>
 #include <iostream>
-#include <regex.h>
+#ifdef WIN32
+  #include <regex>
+#else
+  #include <regex.h>
+#endif
+
 
 #include "SimpleVerify.h"
 
@@ -267,16 +272,24 @@ std::string SimpleV::toCString(Handle<Value> strp){
       return str;
 }
 
-int SimpleV::match(std::string& str,std::string& part,int flag){
+#ifdef WIN32
+  int SimpleV::match(std::string& str,std::string& part,int flag){
+    std::regex pattern(part,std::regex_constants::extended);
+    std::match_results<std::string::const_iterator> result;
+    bool valid = std::regex_match(str,result,pattern);
+    return valid?0:1;
+}
 
+#else
+  int SimpleV::match(std::string& str,std::string& part,int flag){
     regex_t preg;
     const char *buf = (char *)str.c_str();
     const char *regex = (char *)part.c_str();
 
-
     if (regcomp(&preg, regex, REG_EXTENDED|REG_NOSUB)) {//编译正则表达式失败
         return 3;
     }
+
     int z;
     const size_t nmatch = 1;
     regmatch_t pm[nmatch];
@@ -284,6 +297,7 @@ int SimpleV::match(std::string& str,std::string& part,int flag){
     regfree(&preg);//释放正则表达式
     return z == REG_NOMATCH ? 0:1;
 }
+#endif
 
 
 

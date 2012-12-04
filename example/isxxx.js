@@ -1,10 +1,16 @@
 var sv = require('../index.js');
+var op = require('os').platform();
 
+if(op=='win32'){
+	console.log(sv.is('aaaa11@aaaa.com',/[_\\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\\.)+[a-z]{2,3}$/));
+	console.log(sv.is('1234567',/\\d+/));
+	console.log(sv.is('11aa',/^\\d$/));
+}
+else{
 console.log(sv.is('aaaa11@aaaa.com',/[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$/));
 console.log(sv.is('1234567',/\d+/));
-
-console.log(sv.is('11aa',/\d/));
-
+console.log(sv.is('11aa',/^\d/$));
+}
     
 
 console.log(sv.isArray([]))
@@ -61,16 +67,14 @@ console.log(sv.isLen([],1,5))
 
 
 
-console.log('**')
-console.log('**')
-console.log('**')
+
 console.log(sv.isEmail('sfsd@@@fsfas.com'));
 console.log(sv.isEmail('sfsd@fsfas.com'));
 console.log(sv.isEmail('snoopyxdy@sina.com'));
 
 
 console.log(sv.isIp('12.12.12.10'));
-console.log(sv.isIp('10.10.20.30'));
+console.log(sv.isIp('10.10.20.30.50'));
 
 console.log(sv.isUrl('http://bbs.csdn.net/topics/270080323/'));
 console.log(sv.isUrl('10.10.20.30'));

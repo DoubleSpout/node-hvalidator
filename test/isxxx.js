@@ -1,18 +1,27 @@
 var sv = require('../index.js');
 var eq = require('assert').strictEqual;
+var op = require('os').platform();
 
+if(op=='win32'){
+	eq(sv.is('aaaa11@aaaa.com',/[_\\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\\.)+[a-z]{2,3}$/), true);
+	eq(sv.is('1234567',/\\d+/),false);
+	eq(sv.is('1',/^1$/),true);
+	eq(sv.is('11aa',/\\d/),false);
+}
+else{
+	eq(sv.is('aaaa11@aaaa.com',/[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$/), true);
+	eq(sv.is('1234567',/\d+/),false);
+	eq(sv.is('1',/^1$/),true);
+	eq(sv.is('11aa',/\d/),false);
+}
 
-eq(sv.is('aaaa11@aaaa.com',/[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$/), true);
-eq(sv.is('1234567',/\d+/),false);
-eq(sv.is('1',/^1$/),true);
-eq(sv.is('11aa',/\d/),false);
 
     
 
 eq(sv.isArray([]),true)
 eq(sv.isArray(123),false)
 
-eq(sv.isRegExp(/\d/),true)
+eq(sv.isRegExp(/111/),true)
 eq(sv.isRegExp(123),false)
 
 eq(sv.isNumber(123),true)

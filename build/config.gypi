@@ -8,12 +8,10 @@
     "libraries": []
   },
   "variables": {
-    "clang": 0,
-    "gcc_version": 41,
     "host_arch": "ia32",
     "node_install_npm": "true",
     "node_install_waf": "true",
-    "node_prefix": "/usr/local/node0.8.8",
+    "node_prefix": "",
     "node_shared_openssl": "false",
     "node_shared_v8": "false",
     "node_shared_zlib": "false",
@@ -23,6 +21,7 @@
     "target_arch": "ia32",
     "v8_no_strict_aliasing": 1,
     "v8_use_snapshot": "true",
-    "target_version": "0.8.8"
+    "nodedir": "/root/.node-gyp/0.8.3",
+    "copy_dev_lib": "true"
   }
 }
