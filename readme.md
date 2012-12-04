@@ -6,6 +6,8 @@
 
 Currently coding...
 
+In windows regex are different
+
 ##Install
 
    npm install hvalidator
@@ -51,7 +53,9 @@ Currently coding...
 ##Example:
 
 	eq(hv.is('aaaa11@aaaa.com',/[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$/), true);
+	//in windows must be double '\',like  /[_\\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\\.)+[a-z]{2,3}$/
 	eq(hv.is('1234567',/\d+/),false);
+	//in windows must be double '\',like /\\d+/
 	eq(hv.is('1',/^1$/),true);
 	eq(hv.is('11aa',/\d/),false);
 
