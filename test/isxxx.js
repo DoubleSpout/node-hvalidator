@@ -2,18 +2,12 @@ var sv = require('../index.js');
 var eq = require('assert').strictEqual;
 var op = require('os').platform();
 
-if(op=='win32'){
-	//eq(sv.is('aaaa11@aaaa.com',/[_\\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\\.)+[a-z]{2,3}$/), true);
-	eq(sv.is('1234567',/\\d+/),false);
-	eq(sv.is('1',/^1$/),true);
-	eq(sv.is('11aa',/\\d/),false);
-}
-else{
+
 	eq(sv.is('aaaa11@aaaa.com',/[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$/), true);
-	eq(sv.is('1234567',/\d+/),false);
+	eq(sv.is('1234567',/\d+/),true);
 	eq(sv.is('1',/^1$/),true);
-	eq(sv.is('11aa',/\d/),false);
-}
+	eq(sv.is('11aa',/\d/),true);
+
 
 
     
@@ -81,4 +75,35 @@ eq(sv.isUrl('fasfdfdas'),false);
 
 eq(sv.isIp('10.10.10.10'),true);
 eq(sv.isIp('12.12.12.10.10'),false);
+
+
+
+
+eq(sv.isAlpha('abcdeft'),true);
+eq(sv.isAlpha(''),false);
+eq(sv.isAlpha('12345abc'),false);
+eq(sv.isAlpha(1234),false);
+eq(sv.isAlpha({}),false);
+
+
+eq(sv.isAlphanumeric('abdefg'),true);
+eq(sv.isAlphanumeric('123'),true);
+eq(sv.isAlphanumeric('abdefg123'),true);
+eq(sv.isAlphanumeric(12312312),true);
+eq(sv.isAlphanumeric(''),false);
+eq(sv.isAlphanumeric([]),false);
+eq(sv.isAlphanumeric({}),false);
+
+
+
+
+
+
+
+
+
+
+
+
+
 console.log('test done')

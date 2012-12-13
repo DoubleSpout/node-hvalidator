@@ -2,10 +2,14 @@
 #define SV_H
 #include <node.h>
 #include <string>
+#ifdef WIN32
+  #include <regex>
+#else
+  #include <regex.h>
+#endif
 
 class SimpleV {
  public:
-  static v8::Handle<v8::Value> is(const v8::Arguments& args);
   static v8::Handle<v8::Value> isArray(const v8::Arguments& args);
   static v8::Handle<v8::Value> isRegExp(const v8::Arguments& args);
   static v8::Handle<v8::Value> isNumber(const v8::Arguments& args);
@@ -19,6 +23,9 @@ class SimpleV {
   static v8::Handle<v8::Value> isIn(const v8::Arguments& args);
   static v8::Handle<v8::Value> isString(const v8::Arguments& args);
   static v8::Handle<v8::Value> isLen(const v8::Arguments& args);
+  static v8::Handle<v8::Value> isAlpha(const v8::Arguments& args);
+  static v8::Handle<v8::Value> isAlphanumeric(const v8::Arguments& args);
+
   
   static v8::Handle<v8::Value> isDate(const v8::Arguments& args);
   static v8::Handle<v8::Value> isBefore(const v8::Arguments& args);
@@ -33,10 +40,12 @@ class SimpleV {
   static std::string toCString(v8::Handle<v8::Value> strp);
   static int match(std::string& str,std::string& part,int flag=0);
 
+  static regex_t genRegex(std::string& str);
 
  private:
   SimpleV();
   ~SimpleV();
+  
 };
 
 #endif

@@ -1,13 +1,15 @@
 #define BUILDING_NODE_EXTENSION
 #include <node.h>
 #include "SimpleVerify.h"
+#include "SimpleFilter.h"
+
 using namespace v8;
 
 
 
 void Init(Handle<Object> target) {
-  target->Set(String::NewSymbol("is"),
-           FunctionTemplate::New(SimpleV::is)->GetFunction());
+
+//simpleV
   target->Set(String::NewSymbol("isArray"),
            FunctionTemplate::New(SimpleV::isArray)->GetFunction());
   target->Set(String::NewSymbol("isNumber"),
@@ -30,10 +32,15 @@ void Init(Handle<Object> target) {
            FunctionTemplate::New(SimpleV::isLowercase)->GetFunction());
   target->Set(String::NewSymbol("isUppercase"),
            FunctionTemplate::New(SimpleV::isUppercase)->GetFunction());
-   target->Set(String::NewSymbol("isIn"),
+  target->Set(String::NewSymbol("isIn"),
            FunctionTemplate::New(SimpleV::isIn)->GetFunction());
-   target->Set(String::NewSymbol("isLen"),
+  target->Set(String::NewSymbol("isLen"),
            FunctionTemplate::New(SimpleV::isLen)->GetFunction());
+
+  target->Set(String::NewSymbol("isAlpha"),
+	FunctionTemplate::New(SimpleV::isAlpha)->GetFunction());
+  target->Set(String::NewSymbol("isAlphanumeric"),
+	FunctionTemplate::New(SimpleV::isAlphanumeric)->GetFunction());
 
 
   target->Set(String::NewSymbol("isDate"),
@@ -48,6 +55,21 @@ void Init(Handle<Object> target) {
            FunctionTemplate::New(SimpleV::isIp)->GetFunction());
   target->Set(String::NewSymbol("isUrl"),
            FunctionTemplate::New(SimpleV::isUrl)->GetFunction());
+
+
+
+//simpleF
+  target->Set(String::NewSymbol("trim"),
+           FunctionTemplate::New(SimpleF::trim)->GetFunction());
+  target->Set(String::NewSymbol("ltrim"),
+           FunctionTemplate::New(SimpleF::ltrim)->GetFunction());
+  target->Set(String::NewSymbol("rtrim"),
+           FunctionTemplate::New(SimpleF::rtrim)->GetFunction());
+  target->Set(String::NewSymbol("toXss"),
+           FunctionTemplate::New(SimpleF::toXss)->GetFunction());
+
+
+
 }
 
 NODE_MODULE(verify, Init)

@@ -14,6 +14,50 @@
 
 using namespace v8;
 
+
+namespace nRegex {	
+	#ifdef WIN32
+
+	std::regex genRegex(std::string regstr){
+			std::regex pattern(part,std::regex_constants::extended);
+			return  pattern;	
+		}
+
+	bool match(std::regex pattern,std::string& str){
+
+		std::match_results<std::string::const_iterator> result;
+		bool valid = std::regex_match(str,result,pattern);
+		return valid;
+
+	}
+
+	#else
+
+	regex_t genRegex(std::string regstr){
+			regex_t preg;
+			const char *regex = regstr.c_str();
+			
+			regcomp(&preg, regex, REG_EXTENDED|REG_NOSUB);
+			return preg;	
+		}
+
+	bool match(regex_t preg,std::string& str){
+			int z;
+			const char *buf = str.c_str();
+			const size_t nmatch = 1;
+			regmatch_t pm[nmatch];
+			z = regexec(&preg, buf, nmatch, pm, 0);
+			return z != REG_NOMATCH;
+	}
+	#endif
+
+	regex_t email_regex = genRegex("[_\\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\\.)+[a-z]{2,3}$");
+	regex_t ip_regex = genRegex("^(25[0-4]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[1-9])[.](25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])[.](25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])[.](25[0-4]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[1-9])$");
+	regex_t url_regex = genRegex("[a-zA-z]+://[^\\s]*");
+
+}
+
+
 SimpleV::SimpleV() {};
 SimpleV::~SimpleV() {};
 
@@ -42,12 +86,12 @@ Handle<Value> SimpleV::isPositive(const Arguments& args) {//是否是数字,并�
 
 Handle<Value> SimpleV::isInt(const Arguments& args) {//是否是整数
   HandleScope scope;
-  return scope.Close(Boolean::New(int(args[0]->NumberValue()) == args[0]->NumberValue() ));
+  return scope.Close(Boolean::New( args[0]->IsInt32() ));
 }
 
-Handle<Value> SimpleV::isString(const Arguments& args) {//是否是整数
+Handle<Value> SimpleV::isString(const Arguments& args) {//是否是字符串
   HandleScope scope;
-  return scope.Close(Boolean::New(int(args[0]->IsString())));
+  return scope.Close(Boolean::New(args[0]->IsString()));
 }
 
 Handle<Value> SimpleV::isNull(const Arguments& args) {//是否是null或者undefined
@@ -60,6 +104,43 @@ Handle<Value> SimpleV::notNull(const Arguments& args) {//是否不是null而且�
   return scope.Close(Boolean::New(!(args[0]->IsNull()) && !(args[0]->IsUndefined())));
 }
 
+Handle<Value> SimpleV::isAlpha(const Arguments& args) {//是否是字母
+  HandleScope scope;
+  if(args[0]->IsString()){
+	std::string c = toCString(args[0]);
+	int l = c.size();
+	if(l==0) return scope.Close(Boolean::New(0));
+	for (std::string::size_type i = 0; i!=l; ++i){
+		if(!((c[i]>='a' && c[i] <='z') || (c[i]>='A' && c[i] <='Z'))){
+			 return scope.Close(Boolean::New(0));
+		}
+	}
+        return scope.Close(Boolean::New(1));
+  }
+  else{
+     return scope.Close(Boolean::New(0));
+  }
+}
+
+Handle<Value> SimpleV::isAlphanumeric(const Arguments& args) {//是否是字母加数字
+  HandleScope scope;
+  if(args[0]->IsString() || args[0]->IsNumber()){
+	std::string c = toCString(args[0]);
+	int l = c.size();
+	if(l==0) return scope.Close(Boolean::New(0));
+	for (std::string::size_type i = 0; i!=l; ++i){
+		if(!( (c[i]>='a' && c[i] <='z') || (c[i]>='A' && c[i] <='Z') || (c[i]>='0' && c[i] <='9') )){
+			 return scope.Close(Boolean::New(0));
+		}
+	}
+        return scope.Close(Boolean::New(1));
+  }
+  else{
+     return scope.Close(Boolean::New(0));
+  }
+}
+
+
 
 Handle<Value> SimpleV::notEmpty(const Arguments& args) {//是否为空
   HandleScope scope;
@@ -67,7 +148,7 @@ Handle<Value> SimpleV::notEmpty(const Arguments& args) {//是否为空
      ThrowException(Exception::TypeError(String::New("Wrong arguments")));
      return scope.Close(Undefined());
   }
-  std::string s = toCString(args[0]);;
+  std::string s = toCString(args[0]);
   return scope.Close(Boolean::New(s!=""));
 }
 
@@ -79,7 +160,7 @@ Handle<Value> SimpleV::isLowercase(const Arguments& args) {//是否全部为小�
      ThrowException(Exception::TypeError(String::New("Wrong arguments")));
      return scope.Close(Undefined());
   }
-  std::string str = toCString(args[0]);;
+  std::string str = toCString(args[0]);
   int size = str.size();
   for ( int ix = 0; ix < size; ix++ ){
         if(str[ix]>='A' && str[ix]<='Z'){
@@ -95,7 +176,7 @@ Handle<Value> SimpleV::isUppercase(const Arguments& args) {//是否全部为大�
      ThrowException(Exception::TypeError(String::New("Wrong arguments")));
      return scope.Close(Undefined());
   }
-  std::string str =  toCString(args[0]);;
+  std::string str =  toCString(args[0]);
   int size = str.size();
   for ( int ix = 0; ix < size; ix++ ){
         if(str[ix]>='a' && str[ix]<='z'){
@@ -191,25 +272,7 @@ Handle<Value> SimpleV::isBefore(const Arguments& args) {//是否是日期格式
   return scope.Close(Boolean::New(ts1<ts2));
 }
 
-Handle<Value> SimpleV::is(const Arguments& args) {//利用正则表达式判断
-  HandleScope scope;
-     if(!(args[1]->IsRegExp()) && (!(args[0]->IsString())&&!(args[0]->IsNumber()))){
-     ThrowException(Exception::TypeError(String::New("Wrong arguments")));
-     return scope.Close(Undefined());
-  }
-  std::string str = toCString(args[0]);
-  std::string strReg,strFlag;
-  String::Utf8Value strRegU(Local<RegExp>::Cast(args[1])->GetSource());
-  strReg = *strRegU;
-  //int flag;
-  //flag = int(Local<RegExp>::Cast(args[1])->GetFlags());
-  int result = match(str, strReg);
-  if(result == 3){
-         ThrowException(Exception::TypeError(String::New("compile regex error")));
-         return scope.Close(Undefined());
-  }
-  return scope.Close(Boolean::New(result));
-}
+
 
 
 Handle<Value> SimpleV::isEmail(const Arguments& args) {//是否是日期格式
@@ -218,15 +281,9 @@ Handle<Value> SimpleV::isEmail(const Arguments& args) {//是否是日期格式
      ThrowException(Exception::TypeError(String::New("Wrong arguments")));
      return scope.Close(Undefined());
   }
-  
-  std::string email = "[_\\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\\.)+[a-z]{2,3}$";
   std::string str = toCString(args[0]);
-  int result = match(str, email);
-  if(result == 3){
-         ThrowException(Exception::TypeError(String::New("compile regex error")));
-         return scope.Close(Undefined());
-  }
-   return scope.Close(Boolean::New(result));
+
+   return scope.Close(Boolean::New(nRegex::match(nRegex::email_regex, str)));
 }
 
 
@@ -236,15 +293,9 @@ Handle<Value> SimpleV::isIp(const Arguments& args) {//是否是日期格式
      ThrowException(Exception::TypeError(String::New("Wrong arguments")));
      return scope.Close(Undefined());
   }
-  
-  std::string ip = "^(25[0-4]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[1-9])[.](25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])[.](25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])[.](25[0-4]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[1-9])$";
   std::string str = toCString(args[0]);
-  int result = match(str, ip);
-  if(result == 3){
-         ThrowException(Exception::TypeError(String::New("compile regex error")));
-         return scope.Close(Undefined());
-  }
-   return scope.Close(Boolean::New(result));
+   return scope.Close(Boolean::New(nRegex::match(nRegex::ip_regex, str)));
+
 }
 
 Handle<Value> SimpleV::isUrl(const Arguments& args) {//是否是日期格式
@@ -253,15 +304,8 @@ Handle<Value> SimpleV::isUrl(const Arguments& args) {//是否是日期格式
      ThrowException(Exception::TypeError(String::New("Wrong arguments")));
      return scope.Close(Undefined());
   }
-  
-  std::string url = "[a-zA-z]+://[^\\s]*";
   std::string str = toCString(args[0]);
-  int result = match(str, url);
-  if(result == 3){
-         ThrowException(Exception::TypeError(String::New("compile regex error")));
-         return scope.Close(Undefined());
-  }
-   return scope.Close(Boolean::New(result));
+  return scope.Close(Boolean::New(nRegex::match(nRegex::url_regex, str)));
 }
 
 
@@ -272,35 +316,7 @@ std::string SimpleV::toCString(Handle<Value> strp){
       return str;
 }
 
-#ifdef WIN32
-  int SimpleV::match(std::string& str,std::string& part,int flag){
-    std::regex pattern(part,std::regex_constants::extended);
-    std::match_results<std::string::const_iterator> result;
-    bool valid = std::regex_match(str,result,pattern);
-    return valid?0:1;
-}
-
-#else
-  int SimpleV::match(std::string& str,std::string& part,int flag){
-    regex_t preg;
-    const char *buf = (char *)str.c_str();
-    const char *regex = (char *)part.c_str();
-
-    if (regcomp(&preg, regex, REG_EXTENDED|REG_NOSUB)) {//编译正则表达式失败
-        return 3;
-    }
-
-    int z;
-    const size_t nmatch = 1;
-    regmatch_t pm[nmatch];
-    z = regexec(&preg, buf, nmatch, pm, 0);
-    regfree(&preg);//释放正则表达式
-    return z == REG_NOMATCH ? 0:1;
-}
-#endif
 
 
 
-
-void SimpleV::show(){
-}
+void SimpleV::show(){}

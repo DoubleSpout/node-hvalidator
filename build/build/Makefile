@@ -319,7 +319,7 @@ endif
 
 quiet_cmd_regen_makefile = ACTION Regenerating $@
 cmd_regen_makefile = /root/.node-gyp/0.8.15/tools/gyp/gyp -fmake --ignore-environment "--toplevel-dir=." -I/usr/local/nodejs/verify/build/config.gypi -I/usr/local/lib/node_modules/node-gyp/addon.gypi -I/root/.node-gyp/0.8.15/common.gypi "--depth=." "-Goutput_dir=." "--generator-output=build" "-Dlibrary=shared_library" "-Dvisibility=default" "-Dnode_root_dir=/root/.node-gyp/0.8.15" "-Dmodule_root_dir=/usr/local/nodejs/verify" binding.gyp
-Makefile: $(srcdir)/../../lib/node_modules/node-gyp/addon.gypi $(srcdir)/../../../../root/.node-gyp/0.8.15/common.gypi $(srcdir)/build/config.gypi $(srcdir)/binding.gyp
+Makefile: $(srcdir)/../../../../../root/.node-gyp/0.8.15/common.gypi $(srcdir)/../../../lib/node_modules/node-gyp/addon.gypi $(srcdir)/config.gypi $(srcdir)/binding.gyp
 	$(call do_cmd,regen_makefile)
 
 # "all" is a concatenation of the "all" targets from all the included

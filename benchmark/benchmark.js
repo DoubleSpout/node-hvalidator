@@ -2,15 +2,23 @@ var hv = require('../index.js');
 var nv = require('validator').check;
 
 
-
+var i,j;
+i=j=10000;
 
 
 
 
 console.time('nodejs')
 
+while(i--){
 
-	nv('aaaa11@aaaa.com').is(/[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$/)
+
+	nv('123456').is(/d?/)
+
+    nv('aaa').isAlpha()
+
+    nv('123').isAlphanumeric()
+
 
     nv('123').isNumeric()
 
@@ -43,7 +51,11 @@ console.time('nodejs')
 
 	nv('10.10.10.10').isIP()
 
-	console.timeEnd('nodejs')
+
+}
+
+
+console.timeEnd('nodejs')
 
 
 
@@ -51,7 +63,14 @@ console.time('nodejs')
 
 console.time('c++')
 
-	hv.is('aaaa11@aaaa.com',/[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$/)
+while(j--){
+
+	hv.is('123456', /d?/);
+
+	hv.isArray('aaa')
+
+	hv.isAlphanumeric('123')
+
 
 	hv.isArray([])
 
@@ -93,6 +112,7 @@ console.time('c++')
 
 	hv.isIp('10.10.10.10')
 
+}
 
 console.timeEnd('c++')
 

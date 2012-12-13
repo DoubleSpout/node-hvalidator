@@ -17,37 +17,45 @@ In windows regex are different
 ##API(isxxx function return bool)
 
    
-   hv.is(arg1,regexp);//arg1:string or number; arg:regexp
+	hv.is(arg1,regexp);//arg1:string or number; arg:regexp
 
-   hv.isArray(arg1);//arg1:array will be true, others will be false;
+	hv.isArray(arg1);//arg1:array will be true, others will be false;
 
-   hv.isRegExp(arg1);//arg1:regexp will be true, others will be false;
+	hv.isRegExp(arg1);//arg1:regexp will be true, others will be false;
 
-   hv.isNumber(arg1);//arg1:number will be true, others will be false;
+	hv.isNumber(arg1);//arg1:number will be true, others will be false;
 
-   hv.isPositive(arg1);//arg1:the number>0 will be true, others will be false;
+	hv.isPositive(arg1);//arg1:the number>0 will be true, others will be false;
 
-   hv.isInt(arg1);//arg1:the int will be true, others will be false;
+	hv.isInt(arg1);//arg1:the int will be true, others will be false;
 
-   hv.notEmpty(arg1);//arg1:string or number; others will be false; this function can't trim;
+	hv.notEmpty(arg1);//arg1:string or number; others will be false; this function can't trim;
 
-   hv.isDate(arg1);//arg1:the date will be true, others will be false;
+	hv.isDate(arg1);//arg1:the date will be true, others will be false;
 
-   hv.isString(arg1);//arg1:the string will be true, others will be false;
+	hv.isString(arg1);//arg1:the string will be true, others will be false;
 
-   hv.isLowercase(arg1);//arg1:string and lowercasen will be true, others will be false;
+	hv.isLowercase(arg1);//arg1:string and lowercasen will be true, others will be false;
 
-   hv.isUppercase(arg1);//arg1:string and uppercase will be true, others will be false;
+	hv.isUppercase(arg1);//arg1:string and uppercase will be true, others will be false;
 
-   hv.isIn(arg1,contain);//arg1 is string or number; arg2 is array or string
+	hv.isIn(arg1,contain);//arg1 is string or number; arg2 is array or string
 
-   hv.isLen(arg1,min,max);//arg1:string or number or array;
+	hv.isLen(arg1,min,max);//arg1:string or number or array;
 
-   hv.isEmail(arg1);//arg1:string match for email
+	hv.isEmail(arg1);//arg1:string match for email
 
-   hv.isUrl(arg1);//arg1:string match for url
+	hv.isUrl(arg1);//arg1:string match for url
 
-   hv.isIp(arg1);//arg1:string match for ipaddr
+	hv.isIp(arg1);//arg1:string match for ipaddr
+
+	hv.trim(str);//Trim optional `chars`, default is to trim whitespace (\r\n\t )
+
+	hv.ltrim(str);
+
+	hv.rtrim(str);
+
+	hv.toXss(str);//Remove common XSS attack
  
 
 ##Example:
@@ -115,6 +123,13 @@ In windows regex are different
 
 	eq(hv.isIp('10.10.10.10'),true);
 	eq(hv.isIp('12.12.12.10.10'),false);
+
+	eq(sv.trim('   aaa    '),'aaa');
+	eq(sv.ltrim('   aaa    '),'aaa    ');
+	eq(sv.rtrim('   aaa    '),'   aaa');
+
+	eq(sv.toXss('<a href="http" id=\'\'>&</a>'),'&lt;a href=&quot;http&quot; id=&#146;&#146;&gt;&amp;&lt;/a&gt;');
+
   
 ##performance
    
@@ -132,7 +147,7 @@ In windows regex are different
 基于MIT协议发布：
 
 ```
-Copyright (c) 2012 Lei Zongmin(吴中骅) <snoopyxdy@gmail.com>
+Copyright (c) 2012 wu zhonghua(吴中骅) <snoopyxdy@gmail.com>
 
 The MIT License
 
