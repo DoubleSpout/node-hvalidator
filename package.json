@@ -13,7 +13,7 @@
     "node",
     "validate"
   ],
-  "version": "0.3.0",
+  "version": "0.3.5",
   "url": "https://github.com/DoubleSpout/node-hvalidator",
   "homepage": "https://github.com/DoubleSpout/node-hvalidator",
   "repository": {

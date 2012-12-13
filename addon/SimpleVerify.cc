@@ -19,17 +19,21 @@ namespace nRegex {
 	#ifdef WIN32
 
 	std::regex genRegex(std::string regstr){
-			std::regex pattern(part,std::regex_constants::extended);
-			return  pattern;	
+			std::regex pattern(regstr,std::regex_constants::extended);
+			return pattern;	
 		}
 
-	bool match(std::regex pattern,std::string& str){
+	int match(std::regex pattern,std::string& str){
 
 		std::match_results<std::string::const_iterator> result;
 		bool valid = std::regex_match(str,result,pattern);
-		return valid;
+		return valid?1:0;
 
 	}
+	
+	std::regex email_regex = genRegex("[_\\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\\.)+[a-z]{2,3}$");
+	std::regex ip_regex = genRegex("^(25[0-4]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[1-9])[.](25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])[.](25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])[.](25[0-4]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[1-9])$");
+	std::regex url_regex = genRegex("[a-zA-z]+://[^\\s]*");
 
 	#else
 
@@ -41,19 +45,21 @@ namespace nRegex {
 			return preg;	
 		}
 
-	bool match(regex_t preg,std::string& str){
+	int match(regex_t preg,std::string& str){
 			int z;
 			const char *buf = str.c_str();
 			const size_t nmatch = 1;
 			regmatch_t pm[nmatch];
 			z = regexec(&preg, buf, nmatch, pm, 0);
-			return z != REG_NOMATCH;
+			return z != REG_NOMATCH?1:0;
 	}
-	#endif
 
 	regex_t email_regex = genRegex("[_\\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\\.)+[a-z]{2,3}$");
 	regex_t ip_regex = genRegex("^(25[0-4]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[1-9])[.](25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])[.](25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])[.](25[0-4]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[1-9])$");
 	regex_t url_regex = genRegex("[a-zA-z]+://[^\\s]*");
+
+	#endif
+
 
 }
 

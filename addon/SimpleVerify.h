@@ -40,8 +40,6 @@ class SimpleV {
   static std::string toCString(v8::Handle<v8::Value> strp);
   static int match(std::string& str,std::string& part,int flag=0);
 
-  static regex_t genRegex(std::string& str);
-
  private:
   SimpleV();
   ~SimpleV();
